@@ -9,15 +9,17 @@
 class Solution {
 public:
     bool hasCycle(ListNode *head) {
-        std::unordered_set<ListNode*> visited_nodes;
-        ListNode *current_node = head;
-        while (current_node != nullptr) {
-            if (visited_nodes.find(current_node) != visited_nodes.end()) {
-                return true;
+        if(head==NULL) return false;
+        bool cycle = false;
+        while(head->next != NULL){
+            if(head->val == INT_MAX){
+                cycle = true;
+                break;
             }
-            visited_nodes.insert(current_node);
-            current_node = current_node->next;
+            head->val = INT_MAX;
+            head = head->next;
         }
-        return false;
+
+        return cycle;
     }
 };

@@ -1,43 +1,44 @@
 class Solution {
 public:
-    string addString (string& a,string& b,int& aa,int& bb) {
-        int c = 0;
-        while (aa>=0) {
-            c += a[aa--]&1;
-            c += bb>=0 ? b[bb--]&1 : 0;
-            switch (c) {
-                case 0:
-                    cout<<' '<<0;
+    string addBinary(const string& string_a, const string& string_b) {
+        //takes 2 binary strings and returns sum as string
+        int int_aa = string_a.size()-1; //traverse strings backwards
+        int int_bb = string_b.size()-1;
+        int int_ans = (int_aa>int_bb ? int_aa : int_bb) + 1; //max length of a/b +1 in case of carry
+        char char_ans[int_ans + 2];
+        char_ans[int_ans+1] = '\0';
+
+        int int_sum = 0; //stores sum of digits
+        while (true) {
+            //run if in bounds of string_a
+            if (int_aa>=0) {
+                //add string_a digit to int_sum then decrements int_aa index
+                int_sum+=string_a[int_aa--]&1;
+                //&1 looks at only last bit 0 or 1
+                //&15 instead of &1 converts char to int for digits 0-9
+
+                //same with string_b
+                if (int_bb>=0) {
+                    int_sum+=string_b[int_bb--]&1;
+                } else {
+                    //else, don't add to int_sum
+                }
+            } else {
+                if (int_bb>=0) {
+                    int_sum+=string_b[int_bb--]&1;
+                } else {
+                    //both strings ended, break.
                     break;
-                case 1:
-                    cout<<' '<<1;
-                    a[aa+1] = '1';
-                    c=0;
-                    break;
-                case 2:
-                    cout<<' '<<2;
-                    a[aa+1] = '0';
-                    c=1;
-                    break;
-                case 3:
-                    cout<<' '<<3;
-                    a[aa+1] = '1';
-                    c=1;
-                    break;
-                default:
-                    cout<<"ERR"<<endl;
-                    return "";
+                }
             }
-            cout<<endl;
+            char_ans[int_ans--] = (int_sum % 2 == 0 ? '0' : '1');
+            int_sum >>= 1; //bitshift right, read next bit
         }
-        if (c) {a.insert(0,1,'1');}
-        return a;
-    }
-    string addBinary (string& a, string& b) {
-        int aa=a.size()-1, bb=b.size()-1;
-        if (aa>=bb) {
-            return addString(a,b,aa,bb);
+        //handle final carry
+        if (int_sum) {
+            char_ans[int_ans] = '1';
+            return string(char_ans);
         }
-        return addString(b,a,bb,aa);
+        return string(char_ans+1);
     }
 };

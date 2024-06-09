@@ -10,101 +10,57 @@
  */
 class Solution {
 public:
-    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2){
         //two lists of digits for positive ints in reverse order
         //adds two lists together, creates and returns new list
-        if (l1 == NULL) {
-            return l2;
-        } else if (l2==NULL) {
-            return l1;
-        }
-        
-        int int_sum = 0; //stores sum of current digits
-        ListNode* list_return = new ListNode(); //return list
-        ListNode* pointer_return = list_return; //header of return list
-        while (true) {
-            //run if in bounds of string_a
-            if (l1 != nullptr) {
-                cout<<l1->val<<"+";
-                int_sum += l1->val;
-                l1 = l1->next;
-                if (l2 != nullptr) {
-                    cout<<l2->val<<"=";
-                    int_sum += l2->val;
-                    cout<<int_sum<<"\n";
-                    l2 = l2->next;
-                    if (int_sum > 9) {
-                        int_sum -= 10; //next digit
-                        list_return->val = int_sum;
-                        int_sum = 1;
-                    } else {
-                        list_return->val = int_sum;
-                        int_sum = 0;
-                    }
-                } else {
-                    cout<<0<<" = ";
-                    //int_sum += 0;
-                    cout<<int_sum<<"\n";
-                    if (int_sum > 9) {
-                        int_sum -= 10; //next digit
-                        list_return->val = int_sum;
-                        int_sum = 1;
-                    } else {
-                        list_return->val = int_sum;
-                        int_sum = 0;
-                    }
-                }
-            } else {
-                //int_sum += 0;
-                cout<<"0 + ";
-                if (l2 != nullptr) {
-                    cout<<l2->val<<"=";
-                    int_sum += l2->val;
-                    cout<<int_sum<<"\n";
-                    l2 = l2->next;
-                    if (int_sum > 9) {
-                        int_sum -= 10; //next digit
-                        list_return->val = int_sum;
-                        int_sum = 1;
-                    } else {
-                        list_return->val = int_sum;
-                        
-                        
-                        int_sum = 0;
-                    }
-                } else {
-                    cout<<"ERROR"<<endl;
-                    return l2;
-                }
+
+        bool bool_carry = 0; //stores if sum<10 and needs carry
+        ListNode* ll_ans = new ListNode(); //return list answer
+        ListNode* ll_header = ll_ans; //header of return list
+
+        while(l1!=nullptr && l2!=nullptr){
+            int int_sum = l1->val + l2->val + bool_carry;
+            if(int_sum<10){
+                bool_carry = 0;
+            }else{
+                int_sum -= 10;
+                bool_carry = 1;
             }
-            if (l1 != nullptr || l2 != nullptr) {
-
-            } else {
-                if (int_sum) {
-                    ListNode* newNode = new ListNode();
-                    list_return->next = newNode;
-                    list_return = list_return->next;
-                    list_return->val = 1;
-                    return pointer_return;
-                }
-                list_return = nullptr;
-                return pointer_return;
-            }
-            
-
-
-            ListNode* newNode = new ListNode();
-            list_return->next = newNode;
-            list_return = list_return->next;
-            
-            
-            //break;
-
-            //char_ans[int_ans--] = (int_sum % 2 == 0 ? '0' : '1');
-            //int_sum >>= 1; //bitshift right, read next bit
+            ListNode* ll_new = new ListNode(int_sum);
+            ll_ans->next = ll_new;
+            ll_ans = ll_ans->next;
+            l1 = l1->next;
+            l2 = l2->next;
         }
-        //handle final carry
-        
-        return l2;
+        while(l1!=nullptr){
+            int int_sum = l1->val + bool_carry;
+            if(int_sum<10){
+                bool_carry = 0;
+            }else{
+                int_sum -= 10;
+                bool_carry = 1;
+            }
+            ListNode* ll_new = new ListNode(int_sum);
+            ll_ans->next = ll_new;
+            ll_ans = ll_ans->next;
+            l1= l1->next;
+        }
+        while(l2!=nullptr){
+            int int_sum = l2->val + bool_carry;
+            if(int_sum<10){
+                bool_carry = 0;
+            }else{
+                int_sum -= 10;
+                bool_carry = 1;
+            }
+            ListNode* ll_new = new ListNode(int_sum);
+            ll_ans->next = ll_new;
+            ll_ans = ll_ans->next;
+            l2= l2->next;
+        }
+        if(bool_carry){
+            ll_ans->next = new ListNode(bool_carry);
+        }
+        return ll_header->next;
     }
 };
